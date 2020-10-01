@@ -1,29 +1,26 @@
-import sys  
+INT_MAX = 32767
 
-def eggDrop(n, k): 
+def eggDrop(n, k):
+	eggFloor = [[0 for x in range(k + 1)] for x in range(n + 1)] 
  
-    if (k == 1 or k == 0): 
-        return k 
+	for i in range(1, n + 1): 
+		eggFloor[i][1] = 1
+		eggFloor[i][0] = 0
 
-    if (n == 1): 
-        return k 
-  
-    min = sys.maxsize 
+	for j in range(1, k + 1): 
+		eggFloor[1][j] = j 
 
-    # the minimum of these values plus 1. 
-    for x in range(1, k + 1): 
-  
-        res = max(eggDrop(n - 1, x - 1),  
-                  eggDrop(n, k - x)) 
-        if (res < min): 
-            min = res 
-  
-    return min + 1
-  
-# Driver Code 
-if __name__ == "__main__": 
-  
-    n = 2
-    k = 10
-    print("Minimum number of trials in worst case with", 
-           n, "eggs and", k, "floors is", eggDrop(n, k)) 
+	for i in range(2, n + 1): 
+		for j in range(2, k + 1): 
+			eggFloor[i][j] = INT_MAX 
+			for x in range(1, j + 1): 
+				res = 1 + max(eggFloor[i-1][x-1], eggFloor[i][j-x]) 
+				if res < eggFloor[i][j]: 
+					eggFloor[i][j] = res 
+
+	return eggFloor[n][k] 
+
+n = 2
+k = 36
+print("Minimum number of trials in worst case with" + str(n) + "eggs and "
+	+ str(k) + " floors is " + str(eggDrop(n, k))) 
